@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ephemeral OS</title>
+    <style>
+        body { background-color: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 10px; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .output { flex-grow: 1; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; }
+        .input-area { display: flex; flex-shrink: 0; }
+        .prompt { color: #fff; flex-shrink: 0; }
+        .input-box { flex-grow: 1; background: #000; border: none; color: #0f0; font-family: 'Courier New', monospace; outline: none; }
+        .error { color: #f00; }
+        .upload-button { background-color: #333; color: #fff; border: 1px solid #666; padding: 5px 10px; cursor: pointer; margin-left: 10px; }
+        .editor { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: none; flex-direction: column; }
+        .editor-textarea { flex-grow: 1; width: 100%; background: #000; color: #0f0; border: none; font-family: 'Courier New', monospace; outline: none; padding: 10px; resize: none; }
+        .editor-header { display: flex; justify-content: space-between; padding: 5px 10px; background-color: #222; }
+        .editor-button { background-color: #555; color: #fff; border: none; padding: 5px; cursor: pointer; }
+        .success { color: #0f0; }
+        .failure { color: #f00; }
+        .progress { color: #00f; }
+        #countdown { text-align: right; font-size: 0.8em; color: #ff0; padding: 5px; display: none; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+</head>
+<body>
+    <div id="output" class="output"></div>
+    <div id="countdown"></div>
+    <div class="input-area">
+        <span id="prompt-span" class="prompt">guest@ephemeral-os:~$</span>
+        <input type="text" id="input-command" class="input-box" autofocus>
+        <input type="file" id="file-input" style="display: none;" multiple>
+        <button id="upload-btn" class="upload-button">Upload</button>
+    </div>
+
+    <div id="editor-container" class="editor">
+        <div class="editor-header">
+            <span id="editor-filename"></span>
+            <div>
+                <button id="save-btn" class="editor-button">Save</button>
+                <button id="exit-btn" class="editor-button">Exit</button>
+            </div>
+        </div>
+        <textarea id="editor-textarea" class="editor-textarea"></textarea>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
