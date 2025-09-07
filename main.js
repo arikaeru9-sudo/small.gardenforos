@@ -358,7 +358,6 @@ async function executeCommand(command) {
                     log('Pyodide環境をロード中...', 'output');
                     showCountdown('Pyodideをロード中... これには数秒かかります');
                     
-                    // 外部ファイル worker.js を読み込む
                     worker = new Worker('worker.js');
                     worker.addEventListener('message', (event) => {
                         const message = event.data;
