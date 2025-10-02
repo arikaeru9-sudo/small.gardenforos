@@ -55,7 +55,12 @@ self.onmessage = async (event) => {
         try {
             self.postMessage({ type: 'pyodide_log', content: 'Pyodideをロード中...', logType: 'progress' });
             pyodideInstance = await loadPyodide();
-            pyodideInstance.runPython("import sys, io\\nsys.stdout = io.StringIO()\\nsys.stderr = io.StringIO()");
+            // 修正箇所: テンプレートリテラルで複数行のPythonコードを記述
+            pyodideInstance.runPython(`
+                import sys, io
+                sys.stdout = io.StringIO()
+                sys.stderr = io.StringIO()
+            `);
             self.postMessage({ type: 'pyodide_ready' });
         } catch (error) {
             self.postMessage({ type: 'pyodide_log', content: `Pyodideのロード中にエラーが発生しました: ${error.message}`, logType: 'error' });
@@ -68,7 +73,7 @@ self.onmessage = async (event) => {
             syncVFS(vfs);
             self.postMessage({ type: 'pyodide_log', content: 'Pythonスクリプトを実行中...', logType: 'progress' });
             const scriptDir = pyodideInstance.FS.dirname('/vfs' + filePath);
-            pyodideInstance.runPython(`import os\\nos.chdir('${scriptDir}')`);
+            pyodideInstance.runPython(`import os\nos.chdir('${scriptDir}')`);
             await pyodideInstance.runPythonAsync(code);
             
             const stdout = pyodideInstance.runPython('sys.stdout.getvalue()');
