@@ -55,12 +55,15 @@ self.onmessage = async (event) => {
         try {
             self.postMessage({ type: 'pyodide_log', content: 'Pyodideをロード中...', logType: 'progress' });
             pyodideInstance = await loadPyodide();
-            // 修正箇所: テンプレートリテラルで複数行のPythonコードを記述
-            pyodideInstance.runPython(`
-                import sys, io
-                sys.stdout = io.StringIO()
-                sys.stderr = io.StringIO()
-            `);
+            
+            // === 修正箇所: 確実な文字列エスケープによる単一行記述 ===
+            pyodideInstance.runPython(
+                "import sys, io\\n" +
+                "sys.stdout = io.StringIO()\\n" +
+                "sys.stderr = io.StringIO()"
+            );
+            // ===================================================
+            
             self.postMessage({ type: 'pyodide_ready' });
         } catch (error) {
             self.postMessage({ type: 'pyodide_log', content: `Pyodideのロード中にエラーが発生しました: ${error.message}`, logType: 'error' });
